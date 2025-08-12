@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
 import 'package:seconed_depi/metro_project/screens/HomePage.dart';
 import 'package:seconed_depi/metro_project/screens/MapPage.dart';
 
 class RoutesManager {
   static const String map = "/map";
   static const String home = "/home";
+  static const String details = "/details";
 
 
   static Route? router(RouteSettings settings) {
@@ -16,6 +18,10 @@ class RoutesManager {
       case map:
         return MaterialPageRoute(
           builder: (context) => MapPage(),
+        );
+      case details:
+        return MaterialPageRoute(
+          builder: (context) => DetailsPage(),
         );
     }
     return null;

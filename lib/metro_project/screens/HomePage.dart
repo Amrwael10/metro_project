@@ -2,6 +2,7 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:seconed_depi/metro_project/data/data.dart';
+import 'package:seconed_depi/metro_project/managers/RoutesManager.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -80,7 +81,9 @@ class _HomePageState extends State<HomePage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if(enable1.value && enable2.value) Get.to(DetailsPage());
+                  if(enable1.value && enable2.value) {
+                    Navigator.pushNamed(context, RoutesManager.details);
+                  }
                   enable1.value = false;
                   enable2.value = false;
                 },
