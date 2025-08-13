@@ -2,11 +2,13 @@ import 'dart:collection';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:seconed_depi/metro_project/data/data.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
 
 import '../core/Algo.dart';
+import '../data/stations.dart';
 
 class MetroLinePage extends StatefulWidget {
   const MetroLinePage({super.key});
@@ -24,6 +26,26 @@ class _MetroLinePageState extends State<MetroLinePage> {
     ...line_three_old,
     ...list_three_new
   ];
+  Future<Station?> getNearestStation(Position userPos, List<Station> stations) async {
+    Station? nearest;
+    double shortestDistance = double.infinity;
+
+    for (var station in stations) {
+      double distance = Geolocator.distanceBetween(
+        userPos.latitude,
+        userPos.longitude,
+        station.lat,
+        station.long,
+      );
+
+      if (distance < shortestDistance) {
+        shortestDistance = distance;
+        nearest = station;
+      }
+    }
+    return nearest;
+  }
+
   final startController = TextEditingController();
   final endController = TextEditingController();
   var enable1 = false.obs;
@@ -90,6 +112,32 @@ class _MetroLinePageState extends State<MetroLinePage> {
     ExtraOutputMessages.assignAll([...routeDetails]);
     Get.to(DetailsPage() , arguments: ExtraOutputMessages);
   }
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception('Location services are disabled.');
+    }
+
+    // Check permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        throw Exception('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception('Location permissions are permanently denied.');
+    }
+
+    // Get location
+    return await Geolocator.getCurrentPosition();
+  }
 
 
   @override
@@ -139,8 +187,17 @@ class _MetroLinePageState extends State<MetroLinePage> {
                     DropdownMenuEntry(value: station, label: station)
                 ]),
             ElevatedButton(
-                onPressed: (){},
-                child: Text('the nearest station from your location'),
+              onPressed: () async {
+                try {
+                  Position pos = await _determinePosition();
+                  Station? nearest = await getNearestStation(pos, stationsCoordinates);
+                  print('Nearest station: ${nearest?.name}');
+                } catch (e) {
+                  print('Error: $e');
+                }
+              },
+
+              child: Text('the nearest station from your location'),
             ),
             ElevatedButton(
               onPressed: () {
