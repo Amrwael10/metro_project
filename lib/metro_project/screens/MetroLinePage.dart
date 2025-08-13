@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:seconed_depi/metro_project/data/data.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
 
-import '../../core/Algo.dart';
+import '../core/Algo.dart';
 
 class MetroLinePage extends StatefulWidget {
   const MetroLinePage({super.key});
