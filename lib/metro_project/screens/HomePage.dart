@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:seconed_depi/metro_project/data/data.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
@@ -104,8 +105,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Metro Project")),
-      body: SafeArea(
+      appBar: AppBar(title: Text("Metro Project")),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Column(
           spacing: 12,
           children: [
@@ -129,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 controller: endController,
                 hintText: 'please select an end station',
-                width: double.infinity,
+                width: double.infinity.w,
                 enableSearch: true,
                 enableFilter: true,
                 requestFocusOnTap: true,
@@ -164,9 +166,9 @@ class _HomePageState extends State<HomePage> {
                   hintText: 'Enter the destination want to go.',
                   filled: true,
                   fillColor: Colors.grey,
-                  contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(20.r),
                     borderSide: BorderSide.none,),
                   suffixIcon: IconButton(
                       onPressed: (){},
@@ -181,18 +183,18 @@ class _HomePageState extends State<HomePage> {
                 child: Text('show nearest station to the street'),
             ),
             const Divider(),
-            Expanded(
-              child: Obx(() {
-                return ListView.builder(
-                  itemCount: BasicOutputMessages.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(BasicOutputMessages[index]),
-                    );
-                  },
-                );
-              }),
-            ),
+      Obx(() {
+        return ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: BasicOutputMessages.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(BasicOutputMessages[index]),
+              );
+            });
+
+      }),
           ],
         ),
       ),

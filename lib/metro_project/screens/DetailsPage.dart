@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 
@@ -24,14 +25,14 @@ class DetailsPage extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('The stations you will visit' , style: TextStyle(fontSize: 30 , color: Colors.blueAccent),),
-                const SizedBox(height: 12,),
+                Text('The stations you will visit' , style: TextStyle(fontSize: 30.sp , color: Colors.blueAccent),),
+                 SizedBox(height: 12.h,),
                 Expanded(
                   child: ListView.builder(
                       itemCount: Route.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Center(child: Text(Route[index] , style: TextStyle(fontSize: 25 , color: Colors.blueAccent),)),
+                          title: Center(child: Text(Route[index] , style: TextStyle(fontSize: 25.sp , color: Colors.blueAccent),)),
                         );
                       },
                     )
