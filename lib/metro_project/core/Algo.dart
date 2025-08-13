@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import '../metro_project/data/data.dart';
+import '../data/data.dart';
 
 class MetroGraph {
   Map<String, List<String>> stationToLines = {};
