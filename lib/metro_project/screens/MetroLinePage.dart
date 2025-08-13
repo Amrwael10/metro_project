@@ -115,7 +115,7 @@ class _MetroLinePageState extends State<MetroLinePage> {
                   enable1.value = a.isNotNullOrEmpty;
                 },
                 controller: startController,
-                hintText: 'please select a start station',
+                hintText: 'please select your start station',
                 width: double.infinity,
                 enableSearch: true,
                 enableFilter: true,
