@@ -1,5 +1,7 @@
 // data
 // the lines and the stations.
+import 'package:seconed_depi/metro_project/data/stations.dart';
+
 final line1 = [
   "new marg", "el marg", "ezbet el nakhl", "ain shams", "matariya", "helmeyet el zaitoun",
   "hadayek el zaitoun", "saray el qobba", "hamamat el qobba", "kobri el qobba", "manshiet el sadr",
@@ -29,6 +31,97 @@ final list_three_new = [
   "wadi el nile","gamet el dowal","Boulak el Dakrour","Cairo Uni"
 ];
 
+const line1Stations = <Station>[
+  Station(name: 'new marg', line: 1, lat: 30.154048, long: 31.368331),
+  Station(name: 'el marg', line: 1, lat: 30.142389, long: 31.350437),
+  Station(name: 'ezbet el nakhl', line: 1, lat: 30.129268, long: 31.331212),
+  Station(name: 'ain shams', line: 1, lat: 30.122956, long: 31.318479),
+  Station(name: 'matariya', line: 1, lat: 30.113029, long: 31.305247),
+  Station(name: 'helmeyet el zaitoun', line: 1, lat: 30.101842, long: 31.293012),
+  Station(name: 'hadayek el zaitoun', line: 1, lat: 30.090319, long: 31.284508),
+  Station(name: 'saray el qobba', line: 1, lat: 30.082707, long: 31.277273),
+  Station(name: 'hamamat el qobba', line: 1, lat: 30.073281, long: 31.267811),
+  Station(name: 'kobri el qobba', line: 1, lat: 30.066142, long: 31.261317),
+  Station(name: 'manshiet el sadr', line: 1, lat: 30.061356, long: 31.253744),
+  Station(name: 'el demrdash', line: 1, lat: 30.056030, long: 31.247076),
+  Station(name: 'ghamra', line: 1, lat: 30.048556, long: 31.238218),
+  Station(name: 'Al-Shohadaa', line: 1, lat: 30.044420, long: 31.235712),
+  Station(name: 'orabi', line: 1, lat: 30.044881, long: 31.242551),
+  Station(name: 'Nasser', line: 1, lat: 30.046228, long: 31.246349),
+  Station(name: 'Sadat', line: 1, lat: 30.044419, long: 31.235687),
+  Station(name: 'saad zaghloul', line: 1, lat: 30.038238, long: 31.231329),
+  Station(name: 'sayeda zeinab', line: 1, lat: 30.031882, long: 31.228024),
+  Station(name: 'el malek el saleh', line: 1, lat: 30.025260, long: 31.227153),
+  Station(name: 'mar girgis', line: 1, lat: 30.009728, long: 31.230217),
+  Station(name: 'el zahraa', line: 1, lat: 29.996258, long: 31.233560),
+  Station(name: 'dar el salam', line: 1, lat: 29.987154, long: 31.238007),
+  Station(name: 'hadayek el maadi', line: 1, lat: 29.973497, long: 31.244343),
+  Station(name: 'maadi', line: 1, lat: 29.962653, long: 31.256650),
+  Station(name: 'sakanat el maadi', line: 1, lat: 29.955390, long: 31.263871),
+  Station(name: 'tora el balad', line: 1, lat: 29.948687, long: 31.269258),
+  Station(name: 'kozzika', line: 1, lat: 29.943371, long: 31.273450),
+  Station(name: 'tora el asmant', line: 1, lat: 29.938015, long: 31.277450),
+  Station(name: 'el maasara', line: 1, lat: 29.922664, long: 31.283401),
+  Station(name: 'hadayek helwan', line: 1, lat: 29.908203, long: 31.292401),
+  Station(name: 'wadi hof', line: 1, lat: 29.899720, long: 31.300412),
+  Station(name: 'helwan univercity', line: 1, lat: 29.879924, long: 31.313102),
+  Station(name: 'ain helwan', line: 1, lat: 29.866419, long: 31.322169),
+  Station(name: 'helwan', line: 1, lat: 29.849281, long: 31.334579),
+];
+
+const line2Stations = <Station>[
+  Station(name: 'shobra el kheima', line: 2, lat: 30.128623, long: 31.244578),
+  Station(name: 'koliet el zeraa', line: 2, lat: 30.120950, long: 31.244870),
+  Station(name: 'mezallat', line: 2, lat: 30.112358, long: 31.246293),
+  Station(name: 'khalafawy', line: 2, lat: 30.104867, long: 31.246923),
+  Station(name: 'st. teresa', line: 2, lat: 30.097478, long: 31.247269),
+  Station(name: 'rod el farag', line: 2, lat: 30.089999, long: 31.247628),
+  Station(name: 'masarra', line: 2, lat: 30.082433, long: 31.247978),
+  Station(name: 'al shohadaa', line: 2, lat: 30.044420, long: 31.235712),
+  Station(name: 'ataba', line: 2, lat: 30.051181, long: 31.246880),
+  Station(name: 'naguib', line: 2, lat: 30.045532, long: 31.247703),
+  Station(name: 'sadat', line: 2, lat: 30.044419, long: 31.235687),
+  Station(name: 'opera', line: 2, lat: 30.041301, long: 31.224858),
+  Station(name: 'dokki', line: 2, lat: 30.038197, long: 31.215239),
+  Station(name: 'bohooth', line: 2, lat: 30.034524, long: 31.207450),
+  Station(name: 'cairo univercity', line: 2, lat: 30.028156, long: 31.201088),
+  Station(name: 'faisal', line: 2, lat: 30.021467, long: 31.200226),
+  Station(name: 'giza', line: 2, lat: 30.013365, long: 31.200094),
+  Station(name: 'omm el misryeen', line: 2, lat: 30.004158, long: 31.202347),
+  Station(name: 'sakiat mekki', line: 2, lat: 29.996729, long: 31.206593),
+  Station(name: 'el monib', line: 2, lat: 29.990011, long: 31.211522),
+];
+const lineThreeOldStations = <Station>[
+  Station(name: 'adly mansour', line: 3, lat: 30.143898, long: 31.411763),
+  Station(name: 'haykestep', line: 3, lat: 30.139093, long: 31.397450),
+  Station(name: 'omar ibn el khattab', line: 3, lat: 30.135177, long: 31.383100),
+  Station(name: 'qubaa', line: 3, lat: 30.126746, long: 31.361284),
+  Station(name: 'hesham barakat', line: 3, lat: 30.119383, long: 31.345156),
+  Station(name: 'el nozha', line: 3, lat: 30.114209, long: 31.334126),
+  Station(name: 'nadi el shams', line: 3, lat: 30.105884, long: 31.320313),
+  Station(name: 'alf maskan', line: 3, lat: 30.098498, long: 31.312830),
+  Station(name: 'heliopolis square', line: 3, lat: 30.092401, long: 31.308495),
+  Station(name: 'haroun', line: 3, lat: 30.086398, long: 31.303178),
+  Station(name: 'al ahram', line: 3, lat: 30.080051, long: 31.297837),
+  Station(name: 'koleyet el banat', line: 3, lat: 30.072954, long: 31.292605),
+  Station(name: 'stadium', line: 3, lat: 30.064587, long: 31.287728),
+  Station(name: 'fair zone', line: 3, lat: 30.059152, long: 31.281708),
+  Station(name: 'abbassia', line: 3, lat: 30.054520, long: 31.276691),
+  Station(name: 'abdou pasha', line: 3, lat: 30.050331, long: 31.267464),
+  Station(name: 'el geish', line: 3, lat: 30.046867, long: 31.261014),
+  Station(name: 'bab el shaaria', line: 3, lat: 30.052058, long: 31.255789),
+  Station(name: 'ataba', line: 3, lat: 30.051181, long: 31.246880),
+];
+
+const lineThreeNewStations = <Station>[
+  Station(name: 'kitkat', line: 3, lat: 30.066961, long: 31.213520),
+  Station(name: 'sudan', line: 3, lat: 30.062615, long: 31.210606),
+  Station(name: 'imbaba', line: 3, lat: 30.058407, long: 31.205843),
+  Station(name: 'el bohy', line: 3, lat: 30.056086, long: 31.200735),
+  Station(name: 'el qawmia', line: 3, lat: 30.052061, long: 31.195940),
+  Station(name: 'ring road', line: 3, lat: 30.045964, long: 31.186537),
+  Station(name: 'rod el farag axis', line: 3, lat: 30.039525, long: 31.180746),
+];
 
 /*
 (Interchange stations)
