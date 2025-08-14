@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:seconed_depi/metro_project/data/data.dart';
 import 'package:seconed_depi/metro_project/managers/RoutesManager.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
-
 import '../core/Algo.dart';
 import '../data/stations.dart';
 
@@ -27,6 +25,7 @@ class _MetroLinePageState extends State<MetroLinePage> {
     ...line_three_old,
     ...list_three_new
   ];
+
   Future<Station?> getNearestStation(Position userPos, List<Station> stations) async {
     Station? nearest;
     double shortestDistance = double.infinity;
@@ -72,7 +71,7 @@ class _MetroLinePageState extends State<MetroLinePage> {
     // basic data
     final stopCount = shortestPath.length - 1;
     final time = stopCount * 2;
-    var ticketPrice = 5;
+    var ticketPrice = 0;
     if (stopCount > 23) {
       ticketPrice = 20;
     } else if (stopCount == 23) {
@@ -81,6 +80,8 @@ class _MetroLinePageState extends State<MetroLinePage> {
       ticketPrice = 10;
     } else if (stopCount >= 9 && stopCount < 16) {
       ticketPrice = 8;
+    } else if (stopCount < 9){
+      ticketPrice = 5;
     }
 
     final info = [
@@ -113,6 +114,7 @@ class _MetroLinePageState extends State<MetroLinePage> {
     ExtraOutputMessages.assignAll([...routeDetails]);
     Get.to(DetailsPage() , arguments: ExtraOutputMessages);
   }
+
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -146,12 +148,14 @@ class _MetroLinePageState extends State<MetroLinePage> {
     // TODO: implement dispose
     startController.dispose();
     endController.dispose();
-  //  streetController.dispose();
+    //streetController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final region = Get.arguments;
+    endController.text = region;
     return Scaffold(
       appBar: AppBar(title: Text("Choose your start and your destination",style: TextStyle(fontSize: 23.sp),)),
       body: SingleChildScrollView(
@@ -198,35 +202,35 @@ class _MetroLinePageState extends State<MetroLinePage> {
                   print('Error: $e');
                 }
               },
-
               child: Text('the nearest station from your location'),
             ),
             ElevatedButton(
               onPressed: () {
-                // Todo show time , ticket price , number of stations
-                if (enable1.value && enable2.value) getBasicData();
+                //Todo : if (enable1.value && enable2.value)
+                  getBasicData();
               },
               child: Text('Show Basic Data'),
             ),
             ElevatedButton(
               onPressed: () {
-                if(enable1.value && enable2.value) getExtraData();
+                // Todo : if(enable1.value && enable2.value)
+                  getExtraData();
               },
               child: Text('Show More Data'),
             ),
             const Divider(),
-      Obx(() {
-        return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: BasicOutputMessages.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(BasicOutputMessages[index]),
-              );
-            });
+            Obx(() {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: BasicOutputMessages.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(BasicOutputMessages[index]),
+                    );
+                  });
 
-      }),
+            }),
             IconButton(onPressed: (){Navigator.pushNamed(context, RoutesManager.map);}, icon: Icon(Icons.map))
           ],
         ),
@@ -234,4 +238,3 @@ class _MetroLinePageState extends State<MetroLinePage> {
     );
   }
 }
-
