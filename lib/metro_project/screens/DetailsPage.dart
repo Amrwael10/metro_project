@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:seconed_depi/metro_project/managers/AssetsManager.dart';
 
 
 class DetailsPage extends StatelessWidget {
@@ -16,7 +17,7 @@ class DetailsPage extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/red_metro.png"),
+                image: AssetImage(AssetsManager.background),
                 fit: BoxFit.cover,
               ),
             ),

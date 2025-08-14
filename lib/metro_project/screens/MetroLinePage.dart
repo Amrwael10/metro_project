@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:seconed_depi/metro_project/data/data.dart';
+import 'package:seconed_depi/metro_project/managers/RoutesManager.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
 
 import '../core/Algo.dart';
@@ -191,7 +192,8 @@ class _MetroLinePageState extends State<MetroLinePage> {
                 try {
                   Position pos = await _determinePosition();
                   Station? nearest = await getNearestStation(pos, stationsCoordinates);
-                  print('Nearest station: ${nearest?.name}');
+                  print('Nearest station: ${nearest?.EnglishName}');
+                  startController.text=nearest!.EnglishName;
                 } catch (e) {
                   print('Error: $e');
                 }
@@ -225,6 +227,7 @@ class _MetroLinePageState extends State<MetroLinePage> {
             });
 
       }),
+            IconButton(onPressed: (){Navigator.pushNamed(context, RoutesManager.map);}, icon: Icon(Icons.map))
           ],
         ),
       ),

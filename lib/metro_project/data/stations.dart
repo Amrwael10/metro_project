@@ -1,9 +1,10 @@
 class Station
 {
-  final String name;
+  final String EnglishName;
+  final String ArabicName;
   final double lat;
   final double long;
   final int line;
 
-  const Station({required this.line, required this.name, required this.lat,required this.long });
+  const Station({required this.line, required this.ArabicName,required this.EnglishName, required this.lat,required this.long });
 }
