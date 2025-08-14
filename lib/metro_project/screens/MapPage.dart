@@ -13,8 +13,7 @@ class MapPage extends StatelessWidget {
       body: Expanded(
         child: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(AssetsManager.map))
-        
+              image: DecorationImage(image: AssetImage(AssetsManager.map)),
           ),
         ),
       ),
