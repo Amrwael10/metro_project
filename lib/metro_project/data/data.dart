@@ -14,7 +14,7 @@ final line1 = [
 final line2 = [
   "shubra el kheima", "koliet el zeraa", "mezallat", "khalafawy", "St. Teresa", "road el farag",
   "masarra", "Al-Shohadaa", "Attaba", "Mohamed Naguib", "Sadat", "Opera", "dokki",
-  "el Bohoth", "Cairo Uni", "faisal", "Giza", "Om el-Masryeen", "Sakiat Mekky", "el monib"
+  "bohooth", "Cairo Uni", "faisal", "Giza", "Om el-Masryeen", "Sakiat Mekky", "el monib"
 ];
 
 final line_three_old = [
