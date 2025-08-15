@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +10,6 @@ import 'package:seconed_depi/metro_project/managers/ColorsManager.dart';
 import 'package:seconed_depi/metro_project/managers/RoutesManager.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../core/Algo.dart';
 import '../data/stations.dart';
 
@@ -24,12 +22,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final streetController = TextEditingController();
-  var enableShowRegion = false.obs;
+  var enableShowRegion = false;
   var nearestStationName = "".obs;
   final startController = TextEditingController();
   final endController = TextEditingController();
-  var enable1 = false.obs;
-  var enable2 = false.obs;
+  var enable1 = false;
+  var enable2 = false;
   final BasicOutputMessages = <String>[].obs;
   final ExtraOutputMessages = <String>[].obs;
 
@@ -115,9 +113,9 @@ class _HomePageState extends State<HomePage> {
   final stations = [...line1, ...line2, ...line_three_old, ...list_three_new];
 
   Future<Station?> getNearestStation(
-    Position userPos,
-    List<Station> stations,
-  ) async {
+      Position userPos,
+      List<Station> stations,
+      ) async {
     Station? nearest;
     double shortestDistance = double.infinity;
 
@@ -155,15 +153,13 @@ class _HomePageState extends State<HomePage> {
     // basic data
     final stopCount = shortestPath.length - 1;
     final time = stopCount * 2;
-    var ticketPrice = 5;
+    var ticketPrice = 8;
     if (stopCount > 23) {
       ticketPrice = 20;
-    } else if (stopCount == 23) {
+    } else if (stopCount > 16 && stopCount <= 23) {
       ticketPrice = 15;
-    } else if (stopCount >= 16 && stopCount < 23) {
+    } else if (stopCount >= 10 && stopCount <= 16) {
       ticketPrice = 10;
-    } else if (stopCount >= 9 && stopCount < 16) {
-      ticketPrice = 8;
     }
 
     final info = [
@@ -236,7 +232,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -251,34 +246,34 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Obx(
-                  () => nearestStationName.value.isNotEmpty
+                      () => nearestStationName.value.isNotEmpty
                       ? Card(
-                          color: Colors.white.withOpacity(0.8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(12.w),
-                            child: Row(
-                              children: [
-                                Icon(Icons.train, color: Colors.red),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Text(
-                                    "Nearest Station: ${nearestStationName.value}",
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                    color: Colors.white.withOpacity(0.8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: Row(
+                        children: [
+                          Icon(Icons.train, color: Colors.red),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              "Nearest Station: ${nearestStationName.value}",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        )
+                        ],
+                      ),
+                    ),
+                  )
                       : SizedBox.shrink(),
                 ),
-          
+
                 SizedBox(height: 16.h),
                 _buildDropdownSection(),
                 SizedBox(height: 16.h),
@@ -301,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.pushNamed(context, RoutesManager.map);
                   },
-                ),                SizedBox(height: 20.h),
+                ),SizedBox(height: 20.h),
                 _buildStreetSearch(),
                 SizedBox(height: 20.h),
                 ElevatedButton.icon(
@@ -315,12 +310,13 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(Icons.location_searching,color: ColorsManager.gray),
                   label: Text("Show Nearest Station to Destination",style: TextStyle(color: ColorsManager.gray)),
                   onPressed: () async {
-                    if (!enableShowRegion.value) {
+                    if (!enableShowRegion) {
                       Get.snackbar("Error", "Please enter a location");
                       return;
                     }
                     await showRegionFromInput();
                     endController.text = nearestStationName.value;
+                    enable2 = true;
                   },
                 ),
               ],
@@ -339,7 +335,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             DropdownMenu<String>(
-              onSelected: (a) => enable1.value = a.isNotNullOrEmpty,
+              onSelected: (a) => enable1 = a.isNotNullOrEmpty,
               controller: startController,
               hintText: 'Select Start Station',
               width: double.infinity,
@@ -353,7 +349,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 12.h),
             DropdownMenu<String>(
-              onSelected: (a) => enable2.value = a.isNotNullOrEmpty,
+              onSelected: (a) => enable2 = a.isNotNullOrEmpty,
               controller: endController,
               hintText: 'Select Destination',
               width: double.infinity,
@@ -370,7 +366,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildActionButtons() {
     return Row(
       children: [
@@ -393,6 +388,7 @@ class _HomePageState extends State<HomePage> {
                   stationsCoordinates,
                 );
                 startController.text = nearest!.EnglishName;
+                enable1 = true;
               } catch (e) {
                 Get.snackbar('Error', "Some error happened");
               }
@@ -412,7 +408,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             onPressed: () {
-              if (enable1.value && enable2.value) getBasicData();
+              var both = (enable1 && enable2) || (enable1 && enableShowRegion);
+              both ? getBasicData() : null;
             },
           ),
         ),
@@ -429,7 +426,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             onPressed: () {
-              if (enable1.value && enable2.value) getExtraData();
+              var both = (enable1 && enable2) || (enable1 && enableShowRegion);
+              both ? getExtraData() : null;
             },
           ),
         ),
@@ -442,39 +440,39 @@ class _HomePageState extends State<HomePage> {
       return BasicOutputMessages.isEmpty
           ? SizedBox.shrink()
           : Card(
-              color: Colors.white.withOpacity(0.85),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(12.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Trip Info",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.sp,
-                      ),
-                    ),
-                    Divider(),
-                    ...BasicOutputMessages.map(
-                      (msg) => Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
-                        child: Text(msg, style: TextStyle(fontSize: 16.sp)),
-                      ),
-                    ).toList(),
-                  ],
+        color: Colors.white.withOpacity(0.85),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(12.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Trip Info",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.sp,
                 ),
               ),
-            );
+              Divider(),
+              ...BasicOutputMessages.map(
+                    (msg) => Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.h),
+                  child: Text(msg, style: TextStyle(fontSize: 16.sp)),
+                ),
+              ).toList(),
+            ],
+          ),
+        ),
+      );
     });
   }
 
   Widget _buildStreetSearch() {
     return TextField(
-      onChanged: (a) => enableShowRegion.value = a.isNotEmpty,
+      onChanged: (a) => enableShowRegion = a.isNotEmpty,
       controller: streetController,
       decoration: InputDecoration(
         hintText: 'Enter destination location',
