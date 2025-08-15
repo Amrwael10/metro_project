@@ -436,9 +436,9 @@ class _HomePageState extends State<HomePage> {
               onSelected: (a) {
                 enable2 = a.isNotNullOrEmpty;
                 if (a != null) {
-                  startStationLink.value = _createGoogleMapsUrl(a);
+                  endStationLink.value = _createGoogleMapsUrl(a);
                 } else {
-                  startStationLink.value = "";
+                  endStationLink.value = "";
                 }
               },
               controller: endController,
