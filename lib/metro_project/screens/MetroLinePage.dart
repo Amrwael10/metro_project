@@ -285,7 +285,23 @@ class _HomePageState extends State<HomePage> {
                 _buildActionButtons(),
                 SizedBox(height: 20.h),
                 _buildBasicInfo(),
-                SizedBox(height: 20.h),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    backgroundColor: ColorsManager.gray,
+                  ),
+                  icon: Icon(Icons.map, color: ColorsManager.black),
+                  label: Text(
+                    "View Map",
+                    style: TextStyle(color: ColorsManager.black),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, RoutesManager.map);
+                  },
+                ),                SizedBox(height: 20.h),
                 _buildStreetSearch(),
                 SizedBox(height: 20.h),
                 ElevatedButton.icon(
