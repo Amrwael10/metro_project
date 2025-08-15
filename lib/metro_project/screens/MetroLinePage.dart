@@ -30,7 +30,9 @@ class _HomePageState extends State<HomePage> {
   var enable2 = false;
   final BasicOutputMessages = <String>[].obs;
   final ExtraOutputMessages = <String>[].obs;
-
+  // final a5rtextbutton = "".obs;
+  final startStationLink = "".obs;
+  final endStationLink = "".obs;
   final List<Station> cairoStations = [
     ...line1Stations,
     ...line2Stations,
@@ -78,6 +80,10 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  String _createGoogleMapsUrl(String stationName) {
+    return "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$stationName Metro Station Cairo')}";
+  }
+
   void DesPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -113,9 +119,9 @@ class _HomePageState extends State<HomePage> {
   final stations = [...line1, ...line2, ...line_three_old, ...list_three_new];
 
   Future<Station?> getNearestStation(
-      Position userPos,
-      List<Station> stations,
-      ) async {
+    Position userPos,
+    List<Station> stations,
+  ) async {
     Station? nearest;
     double shortestDistance = double.infinity;
 
@@ -173,24 +179,54 @@ class _HomePageState extends State<HomePage> {
     BasicOutputMessages.assignAll([...info]);
   }
 
-  // extra data
+  String? _computeDirection(String start, String end) {
+    final linesMap = <String, List<String>>{
+      "Line 1": line1,
+      "Line 2": line2,
+      "Line 3 (Old)": line_three_old,
+      "Line 3 (New)": list_three_new,
+    };
+
+    for (final entry in linesMap.entries) {
+      final original = entry.value;
+      final lower = original.map((s) => s.toLowerCase()).toList();
+
+      final si = lower.indexOf(start);
+      final ei = lower.indexOf(end);
+
+      if (si != -1 && ei != -1) {
+        return (si < ei) ? original.last : original.first;
+      }
+    }
+
+    return null;
+  }
+
   void getExtraData() {
     final metroGraph = MetroGraph();
     final graph = metroGraph.buildMetroGraph();
 
-    final shortestPath = metroGraph.findShortestPath(
-      graph,
-      startController.text.trim().toLowerCase(),
-      endController.text.trim().toLowerCase(),
-    );
-    if (startController.text == endController.text) {
-      Get.snackbar('Oops', 'your destination can not be your Starting station');
+    final startRaw = startController.text.trim();
+    final endRaw = endController.text.trim();
+
+    final start = startRaw.toLowerCase();
+    final end = endRaw.toLowerCase();
+
+    if (start == end) {
+      Get.snackbar('Oops', 'Your destination cannot be your starting station');
       return;
     }
-    // Route details
+
+    final shortestPath = metroGraph.findShortestPath(graph, start, end);
     final routeDetails = metroGraph.routeWithTransfers(shortestPath);
-    ExtraOutputMessages.assignAll([...routeDetails]);
-    Get.to(DetailsPage(), arguments: ExtraOutputMessages);
+
+    String? direction = _computeDirection(start, end);
+
+    direction ??= shortestPath.isNotEmpty ? shortestPath.last : 'Unknown';
+    Get.to(
+      () => const DetailsPage(),
+      arguments: {'stations': routeDetails, 'direction': direction},
+    );
   }
 
   Future<Position> _determinePosition() async {
@@ -246,31 +282,31 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Obx(
-                      () => nearestStationName.value.isNotEmpty
+                  () => nearestStationName.value.isNotEmpty
                       ? Card(
-                    color: Colors.white.withOpacity(0.8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(12.w),
-                      child: Row(
-                        children: [
-                          Icon(Icons.train, color: Colors.red),
-                          SizedBox(width: 8.w),
-                          Expanded(
-                            child: Text(
-                              "Nearest Station: ${nearestStationName.value}",
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          color: Colors.white.withOpacity(0.8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(12.w),
+                            child: Row(
+                              children: [
+                                Icon(Icons.train, color: Colors.red),
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    "Nearest Station: ${nearestStationName.value}",
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                        )
                       : SizedBox.shrink(),
                 ),
 
@@ -296,7 +332,8 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.pushNamed(context, RoutesManager.map);
                   },
-                ),SizedBox(height: 20.h),
+                ),
+                SizedBox(height: 20.h),
                 _buildStreetSearch(),
                 SizedBox(height: 20.h),
                 ElevatedButton.icon(
@@ -307,8 +344,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     backgroundColor: ColorsManager.black,
                   ),
-                  icon: Icon(Icons.location_searching,color: ColorsManager.gray),
-                  label: Text("Show Nearest Station to Destination",style: TextStyle(color: ColorsManager.gray)),
+                  icon: Icon(
+                    Icons.location_searching,
+                    color: ColorsManager.gray,
+                  ),
+                  label: Text(
+                    "Show Nearest Station to Destination",
+                    style: TextStyle(color: ColorsManager.gray),
+                  ),
                   onPressed: () async {
                     if (!enableShowRegion) {
                       Get.snackbar("Error", "Please enter a location");
@@ -326,6 +369,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildDropdownSection() {
     return Card(
       color: Colors.white.withOpacity(0.85),
@@ -333,10 +377,20 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: EdgeInsets.all(12.w),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Start station dropdown
             DropdownMenu<String>(
               menuHeight: MediaQuery.of(context).size.width,
-              onSelected: (a) => enable1 = a.isNotNullOrEmpty,
+              onSelected: (a) {
+                enable1 = a.isNotNullOrEmpty;
+                if (a != null) {
+                  startStationLink.value =
+                      "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$a station Cairo Metro')}";
+                } else {
+                  startStationLink.value = "";
+                }
+              },
               controller: startController,
               hintText: 'Select Start Station',
               width: double.infinity,
@@ -348,11 +402,46 @@ class _HomePageState extends State<HomePage> {
                   DropdownMenuEntry(value: station, label: station),
               ],
             ),
+            Obx(() {
+              if (startStationLink.value.isEmpty) return SizedBox.shrink();
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () async {
+                    if (startStationLink.value.isEmpty) return;
+
+                    try {
+                      final url = Uri.parse(startStationLink.value);
+                      await launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    } catch (e) {
+                      Get.snackbar(
+                        'Error',
+                        'Could not open maps: ${e.toString()}',
+                      );
+                    }
+                  },
+                  child: Text(
+                    "View Start Station on Map",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              );
+            }),
             SizedBox(height: 12.h),
+
             DropdownMenu<String>(
               menuHeight: MediaQuery.of(context).size.width,
-
-              onSelected: (a) => enable2 = a.isNotNullOrEmpty,
+              onSelected: (a) {
+                enable1 = a.isNotNullOrEmpty;
+                if (a != null) {
+                  startStationLink.value = _createGoogleMapsUrl(a);
+                } else {
+                  startStationLink.value = "";
+                }
+              },
               controller: endController,
               hintText: 'Select Destination',
               width: double.infinity,
@@ -364,18 +453,50 @@ class _HomePageState extends State<HomePage> {
                   DropdownMenuEntry(value: station, label: station),
               ],
             ),
+            Obx(() {
+              if (endStationLink.value.isEmpty) return SizedBox.shrink();
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () async {
+                    if (endStationLink.value.isEmpty) return;
+
+                    try {
+                      final url = Uri.parse(endStationLink.value);
+                      await launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    } catch (e) {
+                      Get.snackbar(
+                        'Error',
+                        'Could not open maps: ${e.toString()}',
+                      );
+                    }
+                  },
+                  child: Text(
+                    "View Destination Station on Map",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              );
+            }),
           ],
         ),
       ),
     );
   }
+
   Widget _buildActionButtons() {
     return Row(
       children: [
         Expanded(
           child: ElevatedButton.icon(
-            icon: Icon(Icons.my_location ,color: ColorsManager.gray),
-            label: Text("Nearest From Location",style: TextStyle(color: ColorsManager.black),),
+            icon: Icon(Icons.my_location, color: ColorsManager.gray),
+            label: Text(
+              "Nearest From Location",
+              style: TextStyle(color: ColorsManager.black),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorsManager.red,
               padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -401,8 +522,11 @@ class _HomePageState extends State<HomePage> {
         SizedBox(width: 8.w),
         Expanded(
           child: ElevatedButton.icon(
-            icon: Icon(Icons.data_usage,color: ColorsManager.black),
-            label: Text("Basic Data",style: TextStyle(color: ColorsManager.black)),
+            icon: Icon(Icons.data_usage, color: ColorsManager.black),
+            label: Text(
+              "Basic Data",
+              style: TextStyle(color: ColorsManager.black),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorsManager.gray,
               padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -419,8 +543,11 @@ class _HomePageState extends State<HomePage> {
         SizedBox(width: 8.w),
         Expanded(
           child: ElevatedButton.icon(
-            icon: Icon(Icons.info_outline,color: ColorsManager.gray,),
-            label: Text("More Data",style: TextStyle(color: ColorsManager.gray)),
+            icon: Icon(Icons.info_outline, color: ColorsManager.gray),
+            label: Text(
+              "More Data",
+              style: TextStyle(color: ColorsManager.gray),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorsManager.black,
               padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -443,33 +570,33 @@ class _HomePageState extends State<HomePage> {
       return BasicOutputMessages.isEmpty
           ? SizedBox.shrink()
           : Card(
-        color: Colors.white.withOpacity(0.85),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(12.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Trip Info",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.sp,
+              color: Colors.white.withOpacity(0.85),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(12.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Trip Info",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.sp,
+                      ),
+                    ),
+                    Divider(),
+                    ...BasicOutputMessages.map(
+                      (msg) => Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Text(msg, style: TextStyle(fontSize: 16.sp)),
+                      ),
+                    ).toList(),
+                  ],
                 ),
               ),
-              Divider(),
-              ...BasicOutputMessages.map(
-                    (msg) => Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: Text(msg, style: TextStyle(fontSize: 16.sp)),
-                ),
-              ).toList(),
-            ],
-          ),
-        ),
-      );
+            );
     });
   }
 

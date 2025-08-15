@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:seconed_depi/metro_project/managers/AssetsManager.dart';
-
+import 'package:seconed_depi/metro_project/managers/ColorsManager.dart';
 class DetailsPage extends StatelessWidget {
   const DetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final routeStations = Get.arguments;
+    final args = Get.arguments as Map<String, dynamic>;
+    final List<String> routeStations = (args['stations'] as List).cast<String>();
+    final String direction = args['direction'] ?? 'Unknown';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -23,7 +25,6 @@ class DetailsPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -32,8 +33,6 @@ class DetailsPage extends StatelessWidget {
               ),
             ),
           ),
-
-          // Gradient overlay for readability
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -47,26 +46,35 @@ class DetailsPage extends StatelessWidget {
               ),
             ),
           ),
-
-          // Content
           Column(
             children: [
-              SizedBox(height :35.h),
-
-
+              SizedBox(height: 35.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                child: Text(
-                  'Stations You Will Visit',
-                  style: TextStyle(
-                    fontSize: 28.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+                child: Column(
+                  children: [
+                    Text(
+                      'Direction: $direction',
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        color: ColorsManager.gray,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      'The stations You Will Visit',
+                      style: TextStyle(
+                        fontSize: 28.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ),
-
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(16.w),
