@@ -119,9 +119,9 @@ class _HomePageState extends State<HomePage> {
   final stations = [...line1, ...line2, ...line_three_old, ...list_three_new];
 
   Future<Station?> getNearestStation(
-    Position userPos,
-    List<Station> stations,
-  ) async {
+      Position userPos,
+      List<Station> stations,
+      ) async {
     Station? nearest;
     double shortestDistance = double.infinity;
 
@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> {
 
     direction ??= shortestPath.isNotEmpty ? shortestPath.last : 'Unknown';
     Get.to(
-      () => const DetailsPage(),
+          () => const DetailsPage(),
       arguments: {'stations': routeDetails, 'direction': direction},
     );
   }
@@ -282,31 +282,31 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Obx(
-                  () => nearestStationName.value.isNotEmpty
+                      () => nearestStationName.value.isNotEmpty
                       ? Card(
-                          color: Colors.white.withOpacity(0.8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(12.w),
-                            child: Row(
-                              children: [
-                                Icon(Icons.train, color: Colors.red),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Text(
-                                    "Nearest Station: ${nearestStationName.value}",
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                    color: Colors.white.withOpacity(0.8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: Row(
+                        children: [
+                          Icon(Icons.train, color: Colors.red),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              "Nearest Station: ${nearestStationName.value}",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        )
+                        ],
+                      ),
+                    ),
+                  )
                       : SizedBox.shrink(),
                 ),
 
@@ -386,7 +386,7 @@ class _HomePageState extends State<HomePage> {
                 enable1 = a.isNotNullOrEmpty;
                 if (a != null) {
                   startStationLink.value =
-                      "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$a station Cairo Metro')}";
+                  "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$a station Cairo Metro')}";
                 } else {
                   startStationLink.value = "";
                 }
@@ -431,11 +431,10 @@ class _HomePageState extends State<HomePage> {
               );
             }),
             SizedBox(height: 12.h),
-
             DropdownMenu<String>(
               menuHeight: MediaQuery.of(context).size.width,
               onSelected: (a) {
-                enable1 = a.isNotNullOrEmpty;
+                enable2 = a.isNotNullOrEmpty;
                 if (a != null) {
                   startStationLink.value = _createGoogleMapsUrl(a);
                 } else {
@@ -570,33 +569,33 @@ class _HomePageState extends State<HomePage> {
       return BasicOutputMessages.isEmpty
           ? SizedBox.shrink()
           : Card(
-              color: Colors.white.withOpacity(0.85),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(12.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Trip Info",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.sp,
-                      ),
-                    ),
-                    Divider(),
-                    ...BasicOutputMessages.map(
-                      (msg) => Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
-                        child: Text(msg, style: TextStyle(fontSize: 16.sp)),
-                      ),
-                    ).toList(),
-                  ],
+        color: Colors.white.withOpacity(0.85),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(12.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Trip Info",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.sp,
                 ),
               ),
-            );
+              Divider(),
+              ...BasicOutputMessages.map(
+                    (msg) => Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.h),
+                  child: Text(msg, style: TextStyle(fontSize: 16.sp)),
+                ),
+              ).toList(),
+            ],
+          ),
+        ),
+      );
     });
   }
 
