@@ -335,6 +335,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             DropdownMenu<String>(
+              menuHeight: MediaQuery.of(context).size.width,
               onSelected: (a) => enable1 = a.isNotNullOrEmpty,
               controller: startController,
               hintText: 'Select Start Station',
@@ -349,6 +350,8 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 12.h),
             DropdownMenu<String>(
+              menuHeight: MediaQuery.of(context).size.width,
+
               onSelected: (a) => enable2 = a.isNotNullOrEmpty,
               controller: endController,
               hintText: 'Select Destination',
