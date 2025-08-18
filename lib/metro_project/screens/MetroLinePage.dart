@@ -1,10 +1,8 @@
-import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 import '../core/Algo.dart';
 import '../data/stations.dart';
@@ -32,7 +30,6 @@ class _HomePageState extends State<HomePage> {
   RxBool enable1 = false.obs;
   RxBool enable2 = false.obs;
   RxBool enableShowRegion = false.obs;
-
   var nearestStationName = "".obs;
 
   final BasicOutputMessages = <String>[].obs;
@@ -119,8 +116,6 @@ class _HomePageState extends State<HomePage> {
     ...lineThreeNewStations,
   ];
 
-
-
   String _createGoogleMapsUrl(String stationName) {
     return "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$stationName Metro Station Cairo')}";
   }
@@ -189,8 +184,15 @@ class _HomePageState extends State<HomePage> {
       endController.text.trim().toLowerCase(),
     );
 
+    // no stations
+    if(startController.text.isEmpty || endController.text.isEmpty){
+      Get.snackbar('Error', 'please enter two stations');
+      return;
+    }
+
+    // same stations
     if (startController.text == endController.text) {
-      Get.snackbar('Oops', 'your destination can not be your Starting station');
+      Get.snackbar('Oops', 'please enter two different stations');
       return;
     }
 
