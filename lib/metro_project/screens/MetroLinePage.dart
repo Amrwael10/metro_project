@@ -1,4 +1,4 @@
-import 'package:dartx/dartx.dart';
+import 'package:dartx/dartx.dart'; // لو مش محتاجه، ممكن تشيله
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
@@ -9,9 +9,13 @@ import 'package:seconed_depi/metro_project/managers/AssetsManager.dart';
 import 'package:seconed_depi/metro_project/managers/ColorsManager.dart';
 import 'package:seconed_depi/metro_project/managers/RoutesManager.dart';
 import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
+import 'package:seconed_depi/metro_project/widgets/Logic%20Widgets/Search_widget.dart';
+import 'package:seconed_depi/metro_project/widgets/UI%20widgets/Basic_Info.dart';
+import 'package:seconed_depi/metro_project/widgets/UI%20widgets/Custom_Buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/Algo.dart';
 import '../data/stations.dart';
+import '../widgets/Logic Widgets/Drop_Down_Menu.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,17 +26,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final streetController = TextEditingController();
-  var enableShowRegion = false;
-  var nearestStationName = "".obs;
   final startController = TextEditingController();
   final endController = TextEditingController();
-  var enable1 = false;
-  var enable2 = false;
+
+  RxBool enable1 = false.obs;
+  RxBool enable2 = false.obs;
+  RxBool enableShowRegion = false.obs;
+
+  var nearestStationName = "".obs;
+
   final BasicOutputMessages = <String>[].obs;
   final ExtraOutputMessages = <String>[].obs;
-  // final a5rtextbutton = "".obs;
-  final startStationLink = "".obs;
-  final endStationLink = "".obs;
+
+  // هنبعتهم للـ DropDownMenu عشان يحدثهم
+  final RxString startStationLink = "".obs;
+  final RxString endStationLink = "".obs;
+
+  // قوائم لست محطات (Strings لواجهة الاختيار)
+  final stations = [...line1, ...line2, ...line_three_old, ...list_three_new];
+
+  // قوائم محطات بكائن Station لحساب أقرب محطة
   final List<Station> cairoStations = [
     ...line1Stations,
     ...line2Stations,
@@ -64,15 +77,14 @@ class _HomePageState extends State<HomePage> {
           station.lat,
           station.long,
         );
-
         if (distance < minDistance) {
           minDistance = distance;
           nearestStationName.value = station.EnglishName;
         }
       }
 
-      if (nearestStationName.isNotEmpty) {
-        // print('nearest destination is : $nearestStationName');
+      // ← كان فيها خطأ قبل كده (لازم .value)
+      if (nearestStationName.value.isNotEmpty) {
         endController.text = nearestStationName.value;
       }
     } catch (e) {
@@ -88,13 +100,11 @@ class _HomePageState extends State<HomePage> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       throw Exception('Location services are disabled.');
     }
 
-    // Check permission
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -107,7 +117,6 @@ class _HomePageState extends State<HomePage> {
       throw Exception('Location permissions are permanently denied.');
     }
 
-    // Get location
     final pos = await geocoding.locationFromAddress(
       "${streetController.text}, Egypt",
     );
@@ -115,13 +124,7 @@ class _HomePageState extends State<HomePage> {
     launchUrl(url);
   }
 
-  // metro stations
-  final stations = [...line1, ...line2, ...line_three_old, ...list_three_new];
-
-  Future<Station?> getNearestStation(
-      Position userPos,
-      List<Station> stations,
-      ) async {
+  Future<Station?> getNearestStation(Position userPos, List<Station> stations) async {
     Station? nearest;
     double shortestDistance = double.infinity;
 
@@ -141,6 +144,12 @@ class _HomePageState extends State<HomePage> {
     return nearest;
   }
 
+  void region(value) {
+    // ← كان فيها خطأ: لازم .value
+    enableShowRegion.value = value.isNotEmpty;
+    print("Enable region? ${enableShowRegion.value}");
+  }
+
   void getBasicData() {
     final metroGraph = MetroGraph();
     final graph = metroGraph.buildMetroGraph();
@@ -156,9 +165,9 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // basic data
     final stopCount = shortestPath.length - 1;
     final time = stopCount * 2;
+
     var ticketPrice = 8;
     if (stopCount > 23) {
       ticketPrice = 20;
@@ -198,7 +207,6 @@ class _HomePageState extends State<HomePage> {
         return (si < ei) ? original.last : original.first;
       }
     }
-
     return null;
   }
 
@@ -221,8 +229,8 @@ class _HomePageState extends State<HomePage> {
     final routeDetails = metroGraph.routeWithTransfers(shortestPath);
 
     String? direction = _computeDirection(start, end);
-
     direction ??= shortestPath.isNotEmpty ? shortestPath.last : 'Unknown';
+
     Get.to(
           () => const DetailsPage(),
       arguments: {'stations': routeDetails, 'direction': direction},
@@ -233,13 +241,11 @@ class _HomePageState extends State<HomePage> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       throw Exception('Location services are disabled.');
     }
 
-    // Check permission
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -252,13 +258,11 @@ class _HomePageState extends State<HomePage> {
       throw Exception('Location permissions are permanently denied.');
     }
 
-    // Get location
     return await Geolocator.getCurrentPosition();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     startController.dispose();
     endController.dispose();
     streetController.dispose();
@@ -272,7 +276,7 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(AssetsManager.background),
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
           ),
         ),
         child: SafeArea(
@@ -292,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.all(12.w),
                       child: Row(
                         children: [
-                          Icon(Icons.train, color: Colors.red),
+                          const Icon(Icons.train, color: Colors.red),
                           SizedBox(width: 8.w),
                           Expanded(
                             child: Text(
@@ -307,15 +311,41 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   )
-                      : SizedBox.shrink(),
+                      : const SizedBox.shrink(),
                 ),
 
                 SizedBox(height: 16.h),
-                _buildDropdownSection(),
+
+                DropDownMenu(
+                  enable1: enable1,
+                  enable2: enable2,
+                  startStationLink: startStationLink,
+                  endStationLink: endStationLink,
+                  startController: startController,
+                  endController: endController,
+                  stations: cairoStations,
+                  createGoogleMapsUrl: _createGoogleMapsUrl,
+                ),
+
                 SizedBox(height: 16.h),
-                _buildActionButtons(),
+
+                Buttons(
+                  enable1: enable1,
+                  enable2: enable2,
+                  startController: startController,
+                  endController: endController,
+                  startStationLink: startStationLink,
+                  endStationLink: endStationLink,
+                  getNearestStation: getNearestStation,
+                  determinePosition: _determinePosition,
+                  getBasicData: getBasicData,
+                  getExtraData: getExtraData,
+                  enableShowRegion: enableShowRegion,
+                ),
+
                 SizedBox(height: 20.h),
-                _buildBasicInfo(),
+                BasicInfo(Messages: BasicOutputMessages),
+
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -333,9 +363,19 @@ class _HomePageState extends State<HomePage> {
                     Navigator.pushNamed(context, RoutesManager.map);
                   },
                 ),
+
                 SizedBox(height: 20.h),
-                _buildStreetSearch(),
+
+                Search(
+                  controller: streetController,
+                  onChanged: (value) {
+                    enableShowRegion.value = value.isNotEmpty;
+                    print("Enable region? ${enableShowRegion.value}");
+                  },
+                ),
+
                 SizedBox(height: 20.h),
+
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -344,276 +384,26 @@ class _HomePageState extends State<HomePage> {
                     ),
                     backgroundColor: ColorsManager.black,
                   ),
-                  icon: Icon(
-                    Icons.location_searching,
-                    color: ColorsManager.gray,
-                  ),
+                  icon: Icon(Icons.location_searching, color: ColorsManager.gray),
                   label: Text(
                     "Show Nearest Station to Destination",
                     style: TextStyle(color: ColorsManager.gray),
                   ),
                   onPressed: () async {
-                    if (!enableShowRegion) {
+                    if (!enableShowRegion.value) {
                       Get.snackbar("Error", "Please enter a location");
                       return;
                     }
                     await showRegionFromInput();
                     endController.text = nearestStationName.value;
-                    enable2 = true;
+                    enable2.value = true;
+                    streetController.clear();
                   },
                 ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownSection() {
-    return Card(
-      color: Colors.white.withOpacity(0.85),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-      child: Padding(
-        padding: EdgeInsets.all(12.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Start station dropdown
-            DropdownMenu<String>(
-              menuHeight: MediaQuery.of(context).size.width,
-              onSelected: (a) {
-                enable1 = a.isNotNullOrEmpty;
-                if (a != null) {
-                  startStationLink.value =
-                  "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$a station Cairo Metro')}";
-                } else {
-                  startStationLink.value = "";
-                }
-              },
-              controller: startController,
-              hintText: 'Select Start Station',
-              width: double.infinity,
-              enableSearch: true,
-              enableFilter: true,
-              requestFocusOnTap: true,
-              dropdownMenuEntries: [
-                for (var station in stations)
-                  DropdownMenuEntry(value: station, label: station),
-              ],
-            ),
-            Obx(() {
-              if (startStationLink.value.isEmpty) return SizedBox.shrink();
-              return Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () async {
-                    if (startStationLink.value.isEmpty) return;
-
-                    try {
-                      final url = Uri.parse(startStationLink.value);
-                      await launchUrl(
-                        url,
-                        mode: LaunchMode.externalApplication,
-                      );
-                    } catch (e) {
-                      Get.snackbar(
-                        'Error',
-                        'Could not open maps: ${e.toString()}',
-                      );
-                    }
-                  },
-                  child: Text(
-                    "View Start Station on Map",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              );
-            }),
-            SizedBox(height: 12.h),
-            DropdownMenu<String>(
-              menuHeight: MediaQuery.of(context).size.width,
-              onSelected: (a) {
-                enable2 = a.isNotNullOrEmpty;
-                if (a != null) {
-                  endStationLink.value = _createGoogleMapsUrl(a);
-                } else {
-                  endStationLink.value = "";
-                }
-              },
-              controller: endController,
-              hintText: 'Select Destination',
-              width: double.infinity,
-              enableSearch: true,
-              enableFilter: true,
-              requestFocusOnTap: true,
-              dropdownMenuEntries: [
-                for (var station in stations)
-                  DropdownMenuEntry(value: station, label: station),
-              ],
-            ),
-            Obx(() {
-              if (endStationLink.value.isEmpty) return SizedBox.shrink();
-              return Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () async {
-                    if (endStationLink.value.isEmpty) return;
-
-                    try {
-                      final url = Uri.parse(endStationLink.value);
-                      await launchUrl(
-                        url,
-                        mode: LaunchMode.externalApplication,
-                      );
-                    } catch (e) {
-                      Get.snackbar(
-                        'Error',
-                        'Could not open maps: ${e.toString()}',
-                      );
-                    }
-                  },
-                  child: Text(
-                    "View Destination Station on Map",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            icon: Icon(Icons.my_location, color: ColorsManager.gray),
-            label: Text(
-              "Nearest From Location",
-              style: TextStyle(color: ColorsManager.black),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorsManager.red,
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-            onPressed: () async {
-              try {
-                Position pos = await _determinePosition();
-                Station? nearest = await getNearestStation(
-                  pos,
-                  stationsCoordinates,
-                );
-                startController.text = nearest!.EnglishName;
-                enable1 = true;
-              } catch (e) {
-                Get.snackbar('Error', "Some error happened");
-              }
-            },
-          ),
-        ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: ElevatedButton.icon(
-            icon: Icon(Icons.data_usage, color: ColorsManager.black),
-            label: Text(
-              "Basic Data",
-              style: TextStyle(color: ColorsManager.black),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorsManager.gray,
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-            onPressed: () {
-              var both = (enable1 && enable2) || (enable1 && enableShowRegion);
-              both ? getBasicData() : null;
-            },
-          ),
-        ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: ElevatedButton.icon(
-            icon: Icon(Icons.info_outline, color: ColorsManager.gray),
-            label: Text(
-              "More Data",
-              style: TextStyle(color: ColorsManager.gray),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorsManager.black,
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
-            onPressed: () {
-              var both = (enable1 && enable2) || (enable1 && enableShowRegion);
-              both ? getExtraData() : null;
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBasicInfo() {
-    return Obx(() {
-      return BasicOutputMessages.isEmpty
-          ? SizedBox.shrink()
-          : Card(
-        color: Colors.white.withOpacity(0.85),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(12.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Trip Info",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.sp,
-                ),
-              ),
-              Divider(),
-              ...BasicOutputMessages.map(
-                    (msg) => Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: Text(msg, style: TextStyle(fontSize: 16.sp)),
-                ),
-              ).toList(),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _buildStreetSearch() {
-    return TextField(
-      onChanged: (a) => enableShowRegion = a.isNotEmpty,
-      controller: streetController,
-      decoration: InputDecoration(
-        hintText: 'Enter destination location',
-        prefixIcon: Icon(Icons.place),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.85),
-        contentPadding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide.none,
-        ),
-        suffixIcon: Icon(Icons.map),
       ),
     );
   }

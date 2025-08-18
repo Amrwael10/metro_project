@@ -19,7 +19,6 @@ class MapPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Zoomable map
           InteractiveViewer(
             minScale: 1.0,
             maxScale: 4.0,
@@ -33,7 +32,6 @@ class MapPage extends StatelessWidget {
             ),
           ),
 
-          // Faint gradient overlay for top readability
           Align(
             alignment: Alignment.topCenter,
             child: Container(
