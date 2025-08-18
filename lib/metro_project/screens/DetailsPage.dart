@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:seconed_depi/metro_project/managers/AssetsManager.dart';
-import 'package:seconed_depi/metro_project/managers/ColorsManager.dart';
+
+import '../managers/AssetsManager.dart';
+import '../managers/ColorsManager.dart';
+
 class DetailsPage extends StatelessWidget {
   const DetailsPage({super.key});
 

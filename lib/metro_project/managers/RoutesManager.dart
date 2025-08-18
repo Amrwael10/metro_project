@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:seconed_depi/metro_project/screens/MetroLinePage.dart';
-import 'package:seconed_depi/metro_project/screens/MapPage.dart';
+
 
 import '../screens/DetailsPage.dart';
+import '../screens/MapPage.dart';
+import '../screens/MetroLinePage.dart';
 
 class RoutesManager {
   static const String map = "/map";

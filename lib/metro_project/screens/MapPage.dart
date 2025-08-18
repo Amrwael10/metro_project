@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:seconed_depi/metro_project/managers/AssetsManager.dart';
+
+import '../managers/AssetsManager.dart';
 
 class MapController extends GetxController {
   final transformationController = TransformationController().obs;

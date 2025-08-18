@@ -4,17 +4,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:seconed_depi/metro_project/managers/AssetsManager.dart';
-import 'package:seconed_depi/metro_project/managers/ColorsManager.dart';
-import 'package:seconed_depi/metro_project/managers/RoutesManager.dart';
-import 'package:seconed_depi/metro_project/screens/DetailsPage.dart';
-import 'package:seconed_depi/metro_project/widgets/Logic%20Widgets/Search_widget.dart';
-import 'package:seconed_depi/metro_project/widgets/UI%20widgets/Basic_Info.dart';
-import 'package:seconed_depi/metro_project/widgets/UI%20widgets/Custom_Buttons.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import '../core/Algo.dart';
 import '../data/stations.dart';
+import '../managers/AssetsManager.dart';
+import '../managers/ColorsManager.dart';
+import '../managers/RoutesManager.dart';
 import '../widgets/Logic Widgets/Drop_Down_Menu.dart';
+import '../widgets/Logic Widgets/Search_widget.dart';
+import '../widgets/UI widgets/Basic_Info.dart';
+import '../widgets/UI widgets/Custom_Buttons.dart';
+import 'DetailsPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -43,8 +44,8 @@ class _HomePageState extends State<HomePage> {
   final List<Station> allStations = [
     ...line1Stations,
     ...line2Stations,
-    ...lineThreeOldStations,
     ...lineThreeNewStations,
+    ...lineThreeOldStations,
   ];
   String? _computeDirection(String start, String end) {
     final linesMap = <String, List<Station>>{

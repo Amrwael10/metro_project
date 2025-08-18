@@ -8,7 +8,6 @@ class Station
 
   const Station({required this.line, required this.ArabicName,required this.EnglishName, required this.lat,required this.long });
 }
-
 const line1Stations = <Station>[
   Station(EnglishName: 'new marg', ArabicName: 'المرج الجديدة', line: 1, lat: 30.154048, long: 31.368331),
   Station(EnglishName: 'el marg', ArabicName: 'المرج', line: 1, lat: 30.142389, long: 31.350437),
@@ -69,6 +68,38 @@ const line2Stations = <Station>[
   Station(EnglishName: 'sakiat mekki', ArabicName: 'ساقية مكي', line: 2, lat: 29.996729, long: 31.206593),
   Station(EnglishName: 'el monib', ArabicName: 'المنيب', line: 2, lat: 29.990011, long: 31.211522),
 ];
+const lineThreeNewStations = <Station>[
+  Station(EnglishName: 'adly mansour', ArabicName: 'عدلي منصور', line: 3, lat: 30.143898, long: 31.411763),
+  Station(EnglishName: 'haykestep', ArabicName: 'هايكستب', line: 3, lat: 30.139093, long: 31.397450),
+  Station(EnglishName: 'omar ibn el khattab', ArabicName: 'عمر بن الخطاب', line: 3, lat: 30.135177, long: 31.383100),
+  Station(EnglishName: 'qubaa', ArabicName: 'قباء', line: 3, lat: 30.126746, long: 31.361284),
+  Station(EnglishName: 'hesham barakat', ArabicName: 'هشام بركات', line: 3, lat: 30.119383, long: 31.345156),
+  Station(EnglishName: 'el nozha', ArabicName: 'النهضة', line: 3, lat: 30.114209, long: 31.334126),
+  Station(EnglishName: 'nadi el shams', ArabicName: 'نادي الشمس', line: 3, lat: 30.105884, long: 31.320313),
+  Station(EnglishName: 'alf maskan', ArabicName: 'ألف مسكن', line: 3, lat: 30.098498, long: 31.312830),
+  Station(EnglishName: 'heliopolis square', ArabicName: 'ميدان هليوبوليس', line: 3, lat: 30.092401, long: 31.308495),
+  Station(EnglishName: 'haroun', ArabicName: 'هارون', line: 3, lat: 30.086398, long: 31.303178),
+  Station(EnglishName: 'al ahram', ArabicName: 'الأهرام', line: 3, lat: 30.080051, long: 31.297837),
+  Station(EnglishName: 'koleyet el banat', ArabicName: 'كلية البنات', line: 3, lat: 30.072954, long: 31.292605),
+  Station(EnglishName: 'stadium', ArabicName: 'الاستاد', line: 3, lat: 30.064587, long: 31.287728),
+  Station(EnglishName: 'fair zone', ArabicName: 'المعرض', line: 3, lat: 30.059152, long: 31.281708),
+  Station(EnglishName: 'abbassia', ArabicName: 'العباسية', line: 3, lat: 30.054520, long: 31.276691),
+  Station(EnglishName: 'abdou pasha', ArabicName: 'عبده باشا', line: 3, lat: 30.050331, long: 31.267464),
+  Station(EnglishName: 'el geish', ArabicName: 'الجيش', line: 3, lat: 30.046867, long: 31.261014),
+  Station(EnglishName: 'bab el shaaria', ArabicName: 'باب الشعرية', line: 3, lat: 30.052058, long: 31.255789),
+  Station(EnglishName: 'Nasser', ArabicName: 'جمال عبد الناصر', line: 3, lat: 30.053491802810218, long: 31.238485012241647),
+  Station(EnglishName: 'Maspero', ArabicName: 'ماسبيرو', line: 3, lat: 30.055743235104515, long: 31.231919101335),
+  Station(EnglishName: 'Safaa Hijazy', ArabicName: 'صفاء حجازي', line: 3, lat: 30.0622708921459, long: 31.223108239702945),
+  Station(EnglishName: 'Kit Kat', ArabicName: 'الكيت كات', line: 3, lat: 30.066536402751584, long: 31.212860662281102),
+  Station(EnglishName: 'Tawfikia', ArabicName: 'التوفيقية', line: 3, lat: 30.065070451203624, long: 31.203106542770044),
+  Station(EnglishName: 'Wadi El Nile', ArabicName: 'وادي النيل', line: 3, lat: 30.05696041333326, long: 31.20093050585198),
+  Station(EnglishName: 'Gamet El Dowal', ArabicName: 'جامعة الدول', line: 3, lat: 30.050092221988287, long: 31.198824651863923),
+  Station(EnglishName: 'Boulak El Dakrour', ArabicName: 'بولاق الدكرور', line: 3, lat: 30.037556775795778, long: 31.19604873311913),
+  Station(EnglishName: 'Cairo University', ArabicName: 'جامعة القاهرة', line: 3, lat: 30.025106041571, long: 31.201331739593027),
+
+
+];
+
 const lineThreeOldStations = <Station>[
   Station(EnglishName: 'adly mansour', ArabicName: 'عدلي منصور', line: 3, lat: 30.143898, long: 31.411763),
   Station(EnglishName: 'haykestep', ArabicName: 'هايكستب', line: 3, lat: 30.139093, long: 31.397450),
@@ -88,10 +119,6 @@ const lineThreeOldStations = <Station>[
   Station(EnglishName: 'abdou pasha', ArabicName: 'عبده باشا', line: 3, lat: 30.050331, long: 31.267464),
   Station(EnglishName: 'el geish', ArabicName: 'الجيش', line: 3, lat: 30.046867, long: 31.261014),
   Station(EnglishName: 'bab el shaaria', ArabicName: 'باب الشعرية', line: 3, lat: 30.052058, long: 31.255789),
-  Station(EnglishName: 'ataba', ArabicName: 'العتبة', line: 3, lat: 30.051181, long: 31.246880),
-];
-
-const lineThreeNewStations = <Station>[
   Station(EnglishName: 'kitkat', ArabicName: 'كتكت', line: 3, lat: 30.066961, long: 31.213520),
   Station(EnglishName: 'sudan', ArabicName: 'السودان', line: 3, lat: 30.062615, long: 31.210606),
   Station(EnglishName: 'imbaba', ArabicName: 'إمبابة', line: 3, lat: 30.058407, long: 31.205843),
@@ -182,8 +209,12 @@ const stationsCoordinates= <Station>[
   Station(EnglishName: 'el qawmia', ArabicName: 'القومية', line: 3, lat: 30.052061, long: 31.195940),
   Station(EnglishName: 'ring road', ArabicName: 'الطريق الدائري', line: 3, lat: 30.045964, long: 31.186537),
   Station(EnglishName: 'rod el farag axis', ArabicName: 'محور روض الفرج', line: 3, lat: 30.039525, long: 31.180746),
+  Station(EnglishName: 'Tawfikia', ArabicName: 'التوفيقية', line: 3, lat: 30.065070451203624, long: 31.203106542770044),
+  Station(EnglishName: 'Wadi El Nile', ArabicName: 'وادي النيل', line: 3, lat: 30.05696041333326, long: 31.20093050585198),
+  Station(EnglishName: 'Gamet El Dowal', ArabicName: 'جامعة الدول', line: 3, lat: 30.050092221988287, long: 31.198824651863923),
+  Station(EnglishName: 'Boulak El Dakrour', ArabicName: 'بولاق الدكرور', line: 3, lat: 30.037556775795778, long: 31.19604873311913),
+  Station(EnglishName: 'Cairo University', ArabicName: 'جامعة القاهرة', line: 3, lat: 30.025106041571, long: 31.201331739593027),
 ];
-
 /*
 (Interchange stations)
 Al-Shohadaa,
