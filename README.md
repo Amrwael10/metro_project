@@ -1,4 +1,4 @@
-# seconed_depi
+# second _depi
 
 A new Depi Flutter project.
 
