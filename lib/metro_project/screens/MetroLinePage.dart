@@ -76,6 +76,7 @@ class _HomePageState extends State<HomePage> {
       final locations = await geocoding.locationFromAddress(
         "${streetController.text}, Egypt",
       );
+
       if (locations.isNotEmpty) {
         userLat = locations.first.latitude;
         userLng = locations.first.longitude;
@@ -101,10 +102,17 @@ class _HomePageState extends State<HomePage> {
       }
 
       if (nearestStation != null) {
-        nearestStationName.value = nearestStation.EnglishName;
-        endController.text = nearestStation.EnglishName;
-        endStationLink.value = _createGoogleMapsUrl(nearestStation.EnglishName);
+        // Check for invalid coordinates first
+        if (nearestStation.lat == 29.849281 && nearestStation.long == 31.334579) {
+          Get.snackbar("Error", "This station location is invalid.");
+        } else {
+          nearestStationName.value = nearestStation.EnglishName;
+          endController.text = nearestStation.EnglishName;
+          endStationLink.value = _createGoogleMapsUrl(nearestStation.EnglishName);
+          print("${nearestStation.long},${nearestStation.lat}");
+        }
       }
+
     } catch (e) {
       Get.snackbar("Error", "Can't find your location: $e");
     }
