@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import '../data/data.dart';
+import '../data/stations.dart';
 
 class MetroGraph {
   Map<String, List<String>> stationToLines = {};
@@ -9,17 +9,17 @@ class MetroGraph {
   Map<String, List<String>> buildMetroGraph() {
     final Map<String, List<String>> graph = {};
 
-    void connectLine(List<String> line, String lineName) {
+    void connectLine(List<Station> line, String lineName) {
       for (int i = 0; i < line.length; i++) {
-        final station = line[i].toLowerCase();
+        final station = line[i].EnglishName.toLowerCase();
         graph.putIfAbsent(station, () => []);
 
         if (i > 0) {
-          final prev = line[i - 1].toLowerCase();
+          final prev = line[i - 1].EnglishName.toLowerCase();
           graph[station]!.add(prev);
         }
         if (i < line.length - 1) {
-          final next = line[i + 1].toLowerCase();
+          final next = line[i + 1].EnglishName.toLowerCase();
           graph[station]!.add(next);
         }
 
@@ -30,14 +30,13 @@ class MetroGraph {
       }
     }
 
-    connectLine(line1, "Line 1");
-    connectLine(line2, "Line 2");
-    connectLine(line_three_old, "Line 3 (Rod el Frag)");
-    connectLine(list_three_new, "Line 3 (Cairo Uni)");
+    connectLine(line1Stations, "Line 1");
+    connectLine(line2Stations, "Line 2");
+    connectLine(lineThreeOldStations, "Line 3 (Rod el Frag)");
+    connectLine(lineThreeNewStations, "Line 3 (Cairo Uni)");
     return graph;
   }
 
-  // BFS Algorithm
   List<String> findShortestPath(Map<String, List<String>> graph, String start,
       String arrival) {
     final visited = <String>{};
@@ -60,7 +59,6 @@ class MetroGraph {
     return [];
   }
 
-  // Instead of printing, return route list
   List<String> routeWithTransfers(List<String> path) {
     List<String> result = [];
     String? previousLine;

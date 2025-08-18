@@ -90,7 +90,7 @@ class Buttons extends StatelessWidget {
 
         Expanded(
           child: Obx(() => ElevatedButton.icon(
-            icon: Icon(Icons.info_outline, color: ColorsManager.gray),
+            icon: Icon(Icons.info_outline, color: ColorsManager.black),
             label: Text(
               "More Data",
               style: TextStyle(color: ColorsManager.gray),

@@ -1,10 +1,9 @@
-import 'package:dartx/dartx.dart'; // لو مش محتاجه، ممكن تشيله
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:seconed_depi/metro_project/data/data.dart';
 import 'package:seconed_depi/metro_project/managers/AssetsManager.dart';
 import 'package:seconed_depi/metro_project/managers/ColorsManager.dart';
 import 'package:seconed_depi/metro_project/managers/RoutesManager.dart';
@@ -38,20 +37,38 @@ class _HomePageState extends State<HomePage> {
   final BasicOutputMessages = <String>[].obs;
   final ExtraOutputMessages = <String>[].obs;
 
-  // هنبعتهم للـ DropDownMenu عشان يحدثهم
   final RxString startStationLink = "".obs;
   final RxString endStationLink = "".obs;
 
-  // قوائم لست محطات (Strings لواجهة الاختيار)
-  final stations = [...line1, ...line2, ...line_three_old, ...list_three_new];
-
-  // قوائم محطات بكائن Station لحساب أقرب محطة
-  final List<Station> cairoStations = [
+  final List<Station> allStations = [
     ...line1Stations,
     ...line2Stations,
     ...lineThreeOldStations,
     ...lineThreeNewStations,
   ];
+  String? _computeDirection(String start, String end) {
+    final linesMap = <String, List<Station>>{
+      "Line 1": line1Stations,
+      "Line 2": line2Stations,
+      "Line 3 (Old)": lineThreeOldStations,
+      "Line 3 (New)": lineThreeNewStations,
+    };
+
+    for (final entry in linesMap.entries) {
+      final lineStations = entry.value;
+      final lowerNames = lineStations.map((s) => s.EnglishName.toLowerCase()).toList();
+
+      final si = lowerNames.indexOf(start);
+      final ei = lowerNames.indexOf(end);
+
+      if (si != -1 && ei != -1) {
+        return (si < ei)
+            ? lineStations.last.EnglishName
+            : lineStations.first.EnglishName;
+      }
+    }
+    return null;
+  }
 
   Future<void> showRegionFromInput() async {
     final double userLat;
@@ -70,7 +87,9 @@ class _HomePageState extends State<HomePage> {
       }
 
       var minDistance = double.infinity;
-      for (var station in cairoStations) {
+      Station? nearestStation;
+
+      for (var station in allStations) {
         var distance = Geolocator.distanceBetween(
           userLat,
           userLng,
@@ -79,18 +98,27 @@ class _HomePageState extends State<HomePage> {
         );
         if (distance < minDistance) {
           minDistance = distance;
-          nearestStationName.value = station.EnglishName;
+          nearestStation = station;
         }
       }
 
-      // ← كان فيها خطأ قبل كده (لازم .value)
-      if (nearestStationName.value.isNotEmpty) {
-        endController.text = nearestStationName.value;
+      if (nearestStation != null) {
+        nearestStationName.value = nearestStation.EnglishName;
+        endController.text = nearestStation.EnglishName;
+        endStationLink.value = _createGoogleMapsUrl(nearestStation.EnglishName);
       }
     } catch (e) {
       Get.snackbar("Error", "Can't find your location: $e");
     }
   }
+  final List<Station> cairoStations = [
+    ...line1Stations,
+    ...line2Stations,
+    ...lineThreeOldStations,
+    ...lineThreeNewStations,
+  ];
+
+
 
   String _createGoogleMapsUrl(String stationName) {
     return "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$stationName Metro Station Cairo')}";
@@ -145,7 +173,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void region(value) {
-    // ← كان فيها خطأ: لازم .value
+    //  كان فيها خطأ: لازم .value
     enableShowRegion.value = value.isNotEmpty;
     print("Enable region? ${enableShowRegion.value}");
   }
@@ -188,27 +216,7 @@ class _HomePageState extends State<HomePage> {
     BasicOutputMessages.assignAll([...info]);
   }
 
-  String? _computeDirection(String start, String end) {
-    final linesMap = <String, List<String>>{
-      "Line 1": line1,
-      "Line 2": line2,
-      "Line 3 (Old)": line_three_old,
-      "Line 3 (New)": list_three_new,
-    };
 
-    for (final entry in linesMap.entries) {
-      final original = entry.value;
-      final lower = original.map((s) => s.toLowerCase()).toList();
-
-      final si = lower.indexOf(start);
-      final ei = lower.indexOf(end);
-
-      if (si != -1 && ei != -1) {
-        return (si < ei) ? original.last : original.first;
-      }
-    }
-    return null;
-  }
 
   void getExtraData() {
     final metroGraph = MetroGraph();
