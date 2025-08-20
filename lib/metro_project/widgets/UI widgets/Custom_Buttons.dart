@@ -7,6 +7,7 @@ import '../../managers/ColorsManager.dart';
 
 class Buttons extends StatelessWidget {
   final RxBool enable1;
+  final RxString nearestwidget;
   final RxBool enable2;
   final TextEditingController startController;
   final TextEditingController? endController;
@@ -17,6 +18,8 @@ class Buttons extends StatelessWidget {
   final Function getBasicData;
   final Function getExtraData;
   final RxBool enableShowRegion;
+  final RxList<String> basicMessages;
+
 
   const Buttons({
     super.key,
@@ -31,6 +34,7 @@ class Buttons extends StatelessWidget {
     required this.getBasicData,
     required this.getExtraData,
     required this.enableShowRegion,
+    required this.basicMessages, required this.nearestwidget
   });
 
   @override
@@ -66,52 +70,61 @@ class Buttons extends StatelessWidget {
         SizedBox(width: 8.w),
 
         Expanded(
-          child: Obx(() => ElevatedButton.icon(
-            icon: Icon(Icons.data_usage, color: ColorsManager.black),
-            label: Text(
-              "Basic Data",
-              style: TextStyle(color: ColorsManager.black),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorsManager.gray,
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
+          child: Obx(
+            () => ElevatedButton.icon(
+              icon: Icon(Icons.data_usage, color: ColorsManager.black),
+              label: Text(
+                "Basic Data",
+                style: TextStyle(color: ColorsManager.black),
               ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorsManager.gray,
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+              onPressed:
+                  (enable1.value && enable2.value) ||
+                      (enable1.value && enableShowRegion.value)
+                  ? () => getBasicData()
+                  : null,
             ),
-            onPressed: (enable1.value && enable2.value) ||
-                (enable1.value && enableShowRegion.value)
-                ? () => getBasicData()
-                : null,
-          )),
+          ),
         ),
 
         SizedBox(width: 8.w),
 
         Expanded(
-          child: Obx(() => ElevatedButton.icon(
-            icon: Icon(Icons.info_outline, color: ColorsManager.gray),
-            label: Text(
-              "More Data",
-              style: TextStyle(color: ColorsManager.gray),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorsManager.black,
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
+          child: Obx(
+            () => ElevatedButton.icon(
+              icon: Icon(Icons.info_outline, color: ColorsManager.gray),
+              label: Text(
+                "More Data",
+                style: TextStyle(color: ColorsManager.gray),
               ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorsManager.black,
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+              onPressed:
+                  (enable1.value && enable2.value) ||
+                      (enable1.value && enableShowRegion.value)
+                  ? () {
+                      getExtraData();
+                      basicMessages.clear();
+                      startController.clear();
+                      endController?.clear();
+                      startStationLink.value = "";
+                      endStationLink.value = "";
+                      nearestwidget.value="";
+                    }
+                  : null,
             ),
-            onPressed: (enable1.value && enable2.value) ||
-                (enable1.value && enableShowRegion.value)
-                ? () {
-              getExtraData();
-              startController.clear();
-              endController?.clear();
-              startStationLink.value = "";
-              endStationLink.value = "";
-            }: null,
-          )),
+          ),
         ),
       ],
     );

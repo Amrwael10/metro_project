@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
   RxBool enableShowRegion = false.obs;
   var nearestStationName = "".obs;
 
-  final BasicOutputMessages = <String>[].obs;
   final ExtraOutputMessages = <String>[].obs;
 
   final RxString startStationLink = "".obs;
@@ -102,7 +101,6 @@ class _HomePageState extends State<HomePage> {
       }
 
       if (nearestStation != null) {
-        // Check for invalid coordinates first
         if (nearestStation.lat == 29.849281 && nearestStation.long == 31.334579) {
           Get.snackbar("Error", "This station location is invalid.");
         } else {
@@ -181,7 +179,7 @@ class _HomePageState extends State<HomePage> {
     enableShowRegion.value = value.isNotEmpty;
     print("Enable region? ${enableShowRegion.value}");
   }
-
+  final BasicOutputMessages = <String>[].obs;
   void getBasicData() {
     final metroGraph = MetroGraph();
     final graph = metroGraph.buildMetroGraph();
@@ -252,7 +250,7 @@ class _HomePageState extends State<HomePage> {
 
     Get.to(
           () => const DetailsPage(),
-      arguments: {'stations': routeDetails, 'direction': direction},
+      arguments: {'stations': routeDetails, 'direction': direction,'Basic info':BasicOutputMessages.toList()},
     );
   }
 
@@ -349,6 +347,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(height: 16.h),
 
                 Buttons(
+                  nearestwidget:nearestStationName ,
                   enable1: enable1,
                   enable2: enable2,
                   startController: startController,
@@ -360,6 +359,7 @@ class _HomePageState extends State<HomePage> {
                   getBasicData: getBasicData,
                   getExtraData: getExtraData,
                   enableShowRegion: enableShowRegion,
+                    basicMessages: BasicOutputMessages
                 ),
 
                 SizedBox(height: 20.h),
