@@ -87,7 +87,7 @@ class DropDownMenu extends StatelessWidget {
 
             // Destination
             DropdownMenu<String>(
-              menuHeight: MediaQuery.of(context).size.width,
+              menuHeight: MediaQuery.of(context).size.width/2,
               onSelected: (a) {
                 final ok = (a != null && a.isNotEmpty);
                 enable2.value = ok;
