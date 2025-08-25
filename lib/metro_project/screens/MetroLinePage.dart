@@ -389,7 +389,6 @@ class _HomePageState extends State<HomePage> {
                   controller: streetController,
                   onChanged: (value) {
                     enableShowRegion.value = value.isNotEmpty;
-                    print("Enable region? ${enableShowRegion.value}");
                   },
                 ),
 
