@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final stopCount = shortestPath.length - 1;
+    final stopCount = shortestPath.length ;
     final time = stopCount * 2;
 
     var ticketPrice = 8;
