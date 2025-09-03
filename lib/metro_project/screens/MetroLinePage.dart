@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final stopCount = shortestPath.length - 1;
+    final stopCount = shortestPath.length ;
     final time = stopCount * 2;
 
     var ticketPrice = 8;
@@ -215,8 +215,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     final info = [
-      "🚉 Number of stations: $stopCount",
       "💰 Ticket price: $ticketPrice EGP",
+      "🚉 Number of stations: $stopCount",
       if (time < 60)
         "⏱️ Estimated time: $time mins"
       else
